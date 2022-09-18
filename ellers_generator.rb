@@ -1,8 +1,8 @@
+require 'rmagick'
 class Row
   attr_accessor :sets,:walls,:map, :floors
   def initialize(size)
     @map=Hash.new{|h,i| h[i]=Array.new}
-    #@map.default=Array.new
     @sets=(0...size).to_a
     @walls=Array.new(size-1){|i|i=true}
     @floors=Array.new(size){|i|i=true}
@@ -18,6 +18,7 @@ class Row
       end 
     end
     floor_map
+    self
   end
 
   def make_passage
@@ -27,6 +28,7 @@ class Row
         floors[i]=false
       end
     end
+    self
   end
 
   def create_next_row
@@ -48,6 +50,16 @@ class Row
   end
 end
 
+class Maze
+  attr_accessor :maze
+  def initialize(x,y)
+    @maze=[Row.new(x).join_adjecent.make_passage]
+    y.times do |rows|
+      @maze<<@maze.last.create_next_row.join_adjecent.make_passage
+    end
+  end
+end
+=begin
 r=Row.new(5)
 r.join_adjecent
 r.make_passage
@@ -63,3 +75,7 @@ puts "\n"
 print r1.walls 
 puts "\n"
 print r1.floors 
+=end
+p Maze.new(5,1)
+
+
