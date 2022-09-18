@@ -93,27 +93,6 @@ gc.draw(imgl)
 imgl.border!(1,1, "LightCyan2")
 
 imgl.write("line7.gif")
-
-
-
-
-=begin
-r=Row.new(5)
-r.join_adjecent
-r.make_passage
-r1=r.create_next_row
-print r.sets 
-puts "\n"
-print r.walls 
-puts "\n"
-print r.floors 
-puts "\n"
-print r1.sets
-puts "\n" 
-print r1.walls 
-puts "\n"
-print r1.floors 
-=end
-p maze
+p "Maze log: #{maze}"
 
 
