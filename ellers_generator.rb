@@ -1,7 +1,8 @@
 require 'rmagick'
 class Row
-  attr_accessor :sets,:walls,:map, :floors
+  attr_accessor :sets,:walls,:map, :floors, :max_id
   def initialize(size)
+    @max_id=size-1
     @map=Hash.new{|h,i| h[i]=Array.new}
     @sets=(0...size).to_a
     @walls=Array.new(size-1){|i|i=true}
@@ -10,7 +11,7 @@ class Row
 
   def join_adjecent
     sets.each_with_index do |k,i|
-      if [true,false].sample
+      if [true,false,false].sample
         if sets[i+1]
           walls[i]=false
           sets[i+1]=k
@@ -25,7 +26,9 @@ class Row
     @map.each do |k,v|
       floors[v.sample]=false
       (v.size-1).times do |i|
-        floors[i]=false
+        
+          floors[i]=false
+        
       end
     end
     self
@@ -37,9 +40,11 @@ class Row
       unless floor
         next_row.sets[i]=self.sets[i]
       else
-        next_row.sets[i]=self.sets.max+1
+        @max_id+=1
+        next_row.sets[i]=@max_id
       end
     end
+    next_row.max_id=next_row.sets.max 
     next_row
   end
   private 
@@ -87,7 +92,7 @@ end
 gc.draw(imgl)
 imgl.border!(1,1, "LightCyan2")
 
-imgl.write("line2.gif")
+imgl.write("line7.gif")
 
 
 
