@@ -65,26 +65,39 @@ class Maze
     @maze.last.walls.map!{|wall| wall=false }
   end
 end
-maze=Maze.new(6,6)
-x=Array.new(9){|i| i*80}
-y=Array.new(9){|i| i*60}
+maze=Maze.new(15,15)
+x=Array.new(42){|i| i*30}
+y=Array.new(42){|i| i*26.25}
+pic = Magick::Image.read("grass_for_maze.png").first
+pic1 = Magick::Image.read("grass_for_maze1.png").first
+background=Magick::Image.read("road.png").first
 imgl = Magick::ImageList.new
 imgl.new_image(480, 420)
 gc = Magick::Draw.new
-gc.stroke_width(3)
-gc.stroke('black')
-
+gc.pattern('road',0,0,background.columns, background.rows){
+  gc.composite(0, 0, 0, 0, background)
+}
+gc.fill('road')
+gc.rectangle(0,0,480,420)
+gc.pattern('grass',0,0,pic.columns, pic.rows){
+    gc.composite(0, 0, 0, 0, pic)
+}
+gc.pattern('grass1',0,0,pic1.columns, pic1.rows){
+  gc.composite(0, 0, 0, 0, pic1)
+}
 
 
 maze.maze.each_with_index do |rows_cells, row|
   rows_cells.walls.each_with_index do |wall,index|
     if wall
-      gc.line(x[index+1],y[row],x[index+1],y[row+1])
+      gc.fill(['grass','grass1'].sample)
+      gc.rectangle(x[index+1],y[row],x[index+1]+2,y[row+1])
     end
   end
   rows_cells.floors.each_with_index do |floor,index|
     if floor
-      gc.line(x[index],y[row+1],x[index+1],y[row+1])
+      gc.fill(['grass','grass1'].sample)
+      gc.rectangle(x[index],y[row+1],x[index+1],y[row+1]+2)
     end
   end
 end
@@ -93,6 +106,6 @@ gc.draw(imgl)
 imgl.border!(1,1, "LightCyan2")
 
 imgl.write("line7.gif")
-p "Maze log: #{maze}"
+p "Maze log: #{p maze}"
 
 
